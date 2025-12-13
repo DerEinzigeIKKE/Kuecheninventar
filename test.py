@@ -1,0 +1,160 @@
+import json
+import csv
+
+#Variablen setzen
+REZEPTADRESSE = "rezepte.json"
+ZUTATENADRESSE = "zutaten.csv"
+
+#Zutaten laden
+def zutaten_laden():
+    vorhandene_zutaten = []
+    with open(ZUTATENADRESSE, mode="r") as f:
+        reader = csv.reader(f)
+        for zeile in reader:
+            if zeile:  # Nur nicht-leere Zeilen laden
+                vorhandene_zutaten.append(zeile)
+    return vorhandene_zutaten
+
+#Rezepte laden
+def rezepte_laden():
+    with open(REZEPTADRESSE, "r") as f:
+        rezepte = json.load(f)
+    return rezepte
+
+#Zutaten speichern
+def zutaten_speichern(zutatenliste):
+    return 0
+
+#Zutatenliste bearbeiten
+def zutaten_bearbeiten():
+    print("Möchten Sie eine Zutat hinzufügen (1) oder entfernen (2)?")
+    wahl = input("Eingabe: ")
+    vorhandene_zutaten = zutaten_laden()
+    match wahl:
+#Zutat hinzufügen        
+        case "1":
+            neue_zutat = input("Geben Sie die hinzuzufügende Zutat(en) ein: ")
+            for zutat in neue_zutat.split():
+                if zutat and [zutat] not in vorhandene_zutaten:
+                    vorhandene_zutaten.append([zutat])
+                    print(f"{zutat} wurde hinzugefügt.")
+                else:
+                    print(f"{zutat} ist bereits vorhanden.")
+            with open(ZUTATENADRESSE, mode="w") as f:
+                writer = csv.writer(f)
+                for eintrag in vorhandene_zutaten:
+                    if eintrag not in (None, "", []):
+                        writer.writerow(eintrag)
+
+#Zutat entfernen
+        case "2":
+            entfernende_zutat = input("Geben Sie die zu entfernende Zutat ein: ")
+            for zutat in entfernende_zutat.split():
+                if [zutat] in vorhandene_zutaten:
+                    vorhandene_zutaten.remove([zutat])
+                    print(f"{zutat} wurde entfernt.")
+                else:
+                    print(f"{zutat} ist nicht vorhanden.")
+            with open(ZUTATENADRESSE, mode="w") as f:
+                writer = csv.writer(f)
+                for eintrag in vorhandene_zutaten:
+                    if eintrag not in (None, "", []):
+                        writer.writerow(eintrag)
+
+        case _: #ELSE
+            print("Ungültige Auswahl.")
+
+#Rezepte bearbeiten
+def rezepte_bearbeiten():
+    print("Möchten Sie ein Rezept hinzufügen (1) oder entfernen (2) oder bearbeiten (3)?")
+    wahl = input("Eingabe: ")
+    rezepte = rezepte_laden()
+    match wahl:
+        case "1": #Rezept hinzufügen
+            rezeptname = input("Geben Sie den Namen des neuen Rezepts ein: ")
+            zutatenliste = input("Geben Sie die Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
+            zutaten = zutatenliste.split()
+            rezepte[rezeptname] = zutaten
+            with open(REZEPTADRESSE, "w") as f:    
+                json.dump(rezepte, f, indent=4)
+
+        case "2": #Rezept entfernen
+            rezeptname = input("Geben Sie den Namen des neuen Rezepts ein: ")
+            if rezeptname in rezepte:
+                del rezepte[rezeptname]
+                with open(REZEPTADRESSE, "w") as f:    
+                    json.dump(rezepte, f, indent=4)
+                print(f"Rezept '{rezeptname}' wurde entfernt.")
+            else:
+                print(f"Rezept '{rezeptname}' nicht gefunden.")
+
+        case "3": #Rezept bearbeiten
+            rezeptname = input("Geben Sie den Namen des neuen Rezepts ein: ")
+            if rezeptname in rezepte:
+                match input("Möchten Sie den Namen (1) oder die Zutaten (2) bearbeiten? "):
+                    case "1":
+                        return 0
+                    case "2":
+                        zutatenliste = input("Geben Sie die neuen Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
+                        zutaten = zutatenliste.split()
+                        rezepte[rezeptname] = zutaten
+                        with open(REZEPTADRESSE, "w") as f:    
+                            json.dump(rezepte, f, indent=4)
+                    case _:
+                        print("Ungültige Auswahl.")
+            else:
+                print(f"Rezept '{rezeptname}' nicht gefunden.")
+
+        case _: #ELSE
+            print("Ungültige Auswahl.")
+
+#Rezeptprüfung
+def fehlende_zutaten(rezeptname):
+  fehlend = []
+  if rezeptname not in rezepte:
+    return f"Rezept '{rezeptname}' nicht gefunden!"
+  benoetigt = rezepte[rezeptname]
+  for zutat in benoetigt:
+    if [zutat] not in vorhandene_zutaten:
+      fehlend.append(zutat)
+
+  if fehlend is not None:
+    return f"Fehlende Zutaten für {rezeptname}: {', '.join(fehlend)}!"
+  else:
+    return "Alle Zutaten gefunden!"
+
+#Ausgabe
+while True:
+    print("Willkommen.")
+    print("Bitte wählen Sie einen Modus:")
+
+    vorhandene_zutaten = zutaten_laden()
+    rezepte = rezepte_laden()
+    rezepte_liste = list(rezepte.keys())
+
+    print(vorhandene_zutaten)
+
+    print("Wähle 1 zum Zutaten bearbeiten!")
+    print("Wähle 2 zum Rezepte bearbeiten!")
+    print("Wähle 3 zum Rezepte überprüfen!")
+    modus = input("Modus: ")
+
+    match modus:
+        case "1":
+            print("Vorhandene Zutaten:")
+            print(vorhandene_zutaten)
+            zutaten_bearbeiten()
+            vorhandene_zutaten = zutaten_laden()
+            print(vorhandene_zutaten)
+        case "2":
+            print("Verfügbare Rezepte:")
+            print(rezepte)
+            rezepte_bearbeiten()
+        case "3":
+            print("Wählen Sie ein Rezept der folgenden Auswahl:")
+            print(rezepte_liste)
+            rezept_wunsch = input("Rezeptname: ")
+            print(fehlende_zutaten(rezept_wunsch))
+        case _:
+            print("Ungültige Eingabe.")
+
