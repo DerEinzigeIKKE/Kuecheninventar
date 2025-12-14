@@ -136,11 +136,10 @@ while True:
     rezepte = rezepte_laden()
     rezepte_liste = list(rezepte.keys())
 
-    print(vorhandene_zutaten)
-
     print("Wähle 1 zum Zutaten bearbeiten!")
     print("Wähle 2 zum Rezepte bearbeiten!")
     print("Wähle 3 zum Rezepte überprüfen!")
+    print("Wähle 9 zum Beenden!")
     modus = input("Modus: ")
 
     match modus:
@@ -159,6 +158,8 @@ while True:
             print(rezepte_liste)
             rezept_wunsch = input("Rezeptname: ")
             print(fehlende_zutaten(rezept_wunsch))
+        case "9":
+            break
         case _:
             print("Ungültige Eingabe.")
 
