@@ -7,7 +7,7 @@ Python Projektarbeit mit Inventarverwaltung, Rezeptverwaltung und Rezeptabgleich
 - Hardcode durch Variablen in oberen Teil der Main ersetzen (z.B. Speicheradressen)
 
 # Inventar 
-CSV mit allen Zutaten (1 Zutat pro Spalte)
+CSV mit allen Zutaten (1 Zutat pro Zeile)
 
 # Rezepte
 
