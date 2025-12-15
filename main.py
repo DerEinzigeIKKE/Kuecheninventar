@@ -40,81 +40,88 @@ def rezepte_speichern(rezepte):
 
 #Zutatenliste bearbeiten
 def zutaten_bearbeiten():
-    print("Möchten Sie eine Zutat hinzufügen (1) oder entfernen (2)?")
-    wahl = input("Eingabe: ")
-    vorhandene_zutaten = zutaten_laden()
-    match wahl:
+    while True:
+        match input("Möchten Sie eine Zutat hinzufügen (1), entfernen (2) oder zurück (9)?"):
 #Zutat hinzufügen        
-        case "1":
-            neue_zutat = input("Geben Sie die hinzuzufügende Zutat(en) ein: ")
-            for zutat in neue_zutat.split():
-                if zutat and [zutat] not in vorhandene_zutaten:
-                    vorhandene_zutaten.append([zutat])
-                    print(f"{zutat} wurde hinzugefügt.")
-                else:
-                    print(f"{zutat} ist bereits vorhanden.")
-            zutaten_speichern(vorhandene_zutaten)
+            case "1":
+                vorhandene_zutaten = zutaten_laden()
+                neue_zutat = input("Geben Sie die hinzuzufügende Zutat(en) ein: ")
+                for zutat in neue_zutat.split():
+                    if zutat and [zutat] not in vorhandene_zutaten:
+                        vorhandene_zutaten.append([zutat])
+                        print(f"{zutat} wurde hinzugefügt.")
+                    else:
+                        print(f"{zutat} ist bereits vorhanden.")
+                zutaten_speichern(vorhandene_zutaten)
 
 #Zutat entfernen
-        case "2":
-            entfernende_zutat = input("Geben Sie die zu entfernende Zutat ein: ")
-            for zutat in entfernende_zutat.split():
-                if [zutat] in vorhandene_zutaten:
-                    vorhandene_zutaten.remove([zutat])
-                    print(f"{zutat} wurde entfernt.")
-                else:
-                    print(f"{zutat} ist nicht vorhanden.")
-            zutaten_speichern(vorhandene_zutaten)
+            case "2":
+                vorhandene_zutaten = zutaten_laden()
+                entfernende_zutat = input("Geben Sie die zu entfernende Zutat ein: ")
+                for zutat in entfernende_zutat.split():
+                    if [zutat] in vorhandene_zutaten:
+                        vorhandene_zutaten.remove([zutat])
+                        print(f"{zutat} wurde entfernt.")
+                    else:
+                        print(f"{zutat} ist nicht vorhanden.")
+                zutaten_speichern(vorhandene_zutaten)
 
-        case _: #ELSE
-            print("Ungültige Auswahl.")
+            case "9":
+                break
+            case _: #ELSE
+                print("Ungültige Auswahl.")
 
 #Rezepte bearbeiten
 def rezepte_bearbeiten():
-    print("Möchten Sie ein Rezept hinzufügen (1) oder entfernen (2) oder bearbeiten (3)?")
-    wahl = input("Eingabe: ")
-    rezepte = rezepte_laden()
-    match wahl:
-        case "1": #Rezept hinzufügen
-            rezeptname_neu = input("Geben Sie den Namen des neuen Rezepts ein: ")
-            zutaten_neues_rezept = input("Geben Sie die Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
-            zutaten_neu = zutaten_neues_rezept.split()
-            rezepte[rezeptname_neu] = zutaten_neu
-            rezepte_speichern(rezepte)
-            print(f"Rezept '{rezeptname_neu}' wurde hinzugefügt.")
-
-        case "2": #Rezept entfernen
-            rezeptname = input("Geben Sie den Namen des neuen Rezepts ein: ")
-            if rezeptname in rezepte:
-                del rezepte[rezeptname]
+    while True:
+        match input("Möchten Sie ein Rezept hinzufügen (1) oder entfernen (2) oder bearbeiten (3)?"):
+            case "1": #Rezept hinzufügen
+                rezepte = rezepte_laden()
+                rezeptname_neu = input("Geben Sie den Namen des neuen Rezepts ein: ")
+                zutaten_neues_rezept = input("Geben Sie die Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
+                zutaten_neu = zutaten_neues_rezept.split()
+                rezepte[rezeptname_neu] = zutaten_neu
                 rezepte_speichern(rezepte)
-                print(f"Rezept '{rezeptname}' wurde entfernt.")
-            else:
-                print(f"Rezept '{rezeptname}' nicht gefunden.")
+                print(f"Rezept '{rezeptname_neu}' wurde hinzugefügt.")
 
-        case "3": #Rezept bearbeiten
-            rezeptname = input("Geben Sie den Namen des neuen Rezepts ein: ")
-            if rezeptname in rezepte:
-                match input("Möchten Sie den Namen (1) oder die Zutaten (2) bearbeiten? "):
-                    case "1":
-                        return 0
-                    case "2":
-                        zutatenliste = input("Geben Sie die neuen Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
-                        zutaten = zutatenliste.split()
-                        rezepte[rezeptname] = zutaten
-                        rezepte_speichern(rezepte)
-                        print(f"Rezept '{rezeptname}' wurde aktualisiert.")
-                    case _:
-                        print("Ungültige Auswahl.")
-            else:
-                print(f"Rezept '{rezeptname}' nicht gefunden.")
+            case "2": #Rezept entfernen
+                rezepte = rezepte_laden()
+                rezeptname = input("Geben Sie den Namen des neuen Rezepts ein: ")
+                if rezeptname in rezepte:
+                    del rezepte[rezeptname]
+                    rezepte_speichern(rezepte)
+                    print(f"Rezept '{rezeptname}' wurde entfernt.")
+                else:
+                    print(f"Rezept '{rezeptname}' nicht gefunden.")
 
-        case _: #ELSE
-            print("Ungültige Auswahl.")
+            case "3": #Rezept bearbeiten
+                rezepte = rezepte_laden()
+                rezeptname = input("Geben Sie den Namen des neuen Rezepts ein: ")
+                if rezeptname in rezepte:
+                    match input("Möchten Sie den Namen (1) oder die Zutaten (2) bearbeiten? "):
+                        case "1":
+                            return 0
+                        case "2":
+                            zutatenliste = input("Geben Sie die neuen Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
+                            zutaten = zutatenliste.split()
+                            rezepte[rezeptname] = zutaten
+                            rezepte_speichern(rezepte)
+                            print(f"Rezept '{rezeptname}' wurde aktualisiert.")
+                        case _:
+                            print("Ungültige Auswahl.")
+                else:
+                    print(f"Rezept '{rezeptname}' nicht gefunden.")
+
+            case "9":
+                break
+            case _: #ELSE
+                print("Ungültige Auswahl.")
 
 #Rezeptprüfung
-def fehlende_zutaten(rezeptname):
+def rezeptprüfung(rezeptname):
   fehlend = []
+  rezepte = rezepte_laden()
+  vorhandene_zutaten = zutaten_laden()
   if rezeptname not in rezepte:
     return f"Rezept '{rezeptname}' nicht gefunden!"
   benoetigt = rezepte[rezeptname]
@@ -139,25 +146,24 @@ while True:
     print("Wähle 1 zum Zutaten bearbeiten!")
     print("Wähle 2 zum Rezepte bearbeiten!")
     print("Wähle 3 zum Rezepte überprüfen!")
+    print("Wähle 7 zum Zutaten anzeigen!")
+    print("Wähle 8 zum Rezepte anzeigen!")
     print("Wähle 9 zum Beenden!")
     modus = input("Modus: ")
 
     match modus:
         case "1":
-            print("Vorhandene Zutaten:")
-            print(vorhandene_zutaten)
             zutaten_bearbeiten()
-            vorhandene_zutaten = zutaten_laden()
-            print(vorhandene_zutaten)
         case "2":
-            print("Verfügbare Rezepte:")
-            print(rezepte)
             rezepte_bearbeiten()
         case "3":
-            print("Wählen Sie ein Rezept der folgenden Auswahl:")
-            print(rezepte_liste)
-            rezept_wunsch = input("Rezeptname: ")
-            print(fehlende_zutaten(rezept_wunsch))
+            print(rezeptprüfung(input("Rezeptname: ")))
+        case "7":
+            print("Vorhandene Zutaten:")
+            zutaten = zutaten_laden()
+            print(zutaten)
+        case "8":
+            print(list(rezepte_laden().keys()))
         case "9":
             break
         case _:
