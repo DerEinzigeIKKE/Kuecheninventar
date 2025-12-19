@@ -3,8 +3,8 @@ Python Projektarbeit mit Inventarverwaltung, Rezeptverwaltung und Rezeptabgleich
 
 # TODO
 - GUI :/
-- Funktionen vereinzeln
-- Hardcode durch Variablen in oberen Teil der Main ersetzen (z.B. Speicheradressen)
++ Funktionen vereinzeln
++ Hardcode durch Variablen in oberen Teil der Main ersetzen (z.B. Speicheradressen)
 
 # Inventar 
 CSV mit allen Zutaten (1 Zutat pro Zeile)
