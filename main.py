@@ -68,7 +68,6 @@ def zutaten_entfernen(weg_zutaten):
             vorhandene_zutaten.remove([zutat])
             entfernte_zutaten.append(zutat)
         else:
-            print(f"{zutat} nicht gefunden.")
             nicht_gefundene_zutaten.append(zutat)
     zutaten_speichern(vorhandene_zutaten)
     if len(nicht_gefundene_zutaten) > 0 and len(entfernte_zutaten) > 0:
@@ -85,7 +84,6 @@ def rezepte_hinzufuegen(neuer_name, neue_zutaten):
     rezepte = rezepte_laden()
     if neuer_name in rezepte:
         return f"Rezept '{neuer_name}' existiert bereits!"
-    zutaten_neues_rezept = input("Geben Sie die Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
     zutaten_neu = neue_zutaten.split()
     rezepte[neuer_name] = zutaten_neu
     rezepte_speichern(rezepte)
@@ -123,6 +121,15 @@ def rezepte_bearbeiten(rezeptname):
     else:
         print(f"Rezept '{rezeptname}' nicht gefunden.")
 
+#Ein Rezept anzeigen
+def rezept_anzeigen(rezeptname):
+    rezepte = rezepte_laden()
+    if rezeptname in rezepte:
+        zutatenliste = rezepte[rezeptname]
+        return f"Rezept '{rezeptname}': {', '.join(zutatenliste)}"
+    else:
+        return f"Rezept '{rezeptname}' nicht gefunden."
+
 #Rezeptprüfung
 def rezeptprüfung(rezeptname):
   fehlend = []
@@ -154,6 +161,7 @@ while True:
     print("Wähle 3 zum Rezepte hinzufügen!")
     print("Wähle 4 zum Rezepte bearbeiten!")
     print("Wähle 5 zum Rezepte entfernen!")
+    print("Wähle 6 um EIN Rezept anzuzeigen!")
     print("Wähle 7 zum Zutaten anzeigen!")
     print("Wähle 8 zum Rezepte anzeigen!")
     print("Wähle 9 zum Vergleichen!")
@@ -177,12 +185,16 @@ while True:
         case "5":#Rezepte entfernen
             rezeptname = input("Geben Sie den Namen des zu entfernenden Rezepts ein: ")
             print(rezepte_entfernen(rezeptname))
+        case "6":#Ein Rezept anzeigen
+            rezeptname = input("Geben Sie den Namen des Rezept ein: ")
+            print(rezept_anzeigen(rezeptname))
         case "7":#Zutaten anzeigen
             print(vorhandene_zutaten)
         case "8":#Rezepte anzeigen
             print(rezepte_liste)
         case "9":#Rezeptprüfung
             rezeptname = input("Geben Sie den Namen des Rezept ein: ")
+            print(rezeptname)
             print(rezeptprüfung(rezeptname))
         case "0":#Beenden
             break
