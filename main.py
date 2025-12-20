@@ -81,21 +81,19 @@ def zutaten_entfernen(weg_zutaten):
         return "Keine Zutaten entfernt."
     
 #Rezepte hinzufügen
-def rezepte_hinzufuegen():
+def rezepte_hinzufuegen(neuer_name, neue_zutaten):
     rezepte = rezepte_laden()
-    rezeptname_neu = input("Geben Sie den Namen des neuen Rezepts ein: ")
-    if rezeptname_neu in rezepte:
-        return f"Rezept '{rezeptname_neu}' existiert bereits!"
+    if neuer_name in rezepte:
+        return f"Rezept '{neuer_name}' existiert bereits!"
     zutaten_neues_rezept = input("Geben Sie die Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
-    zutaten_neu = zutaten_neues_rezept.split()
-    rezepte[rezeptname_neu] = zutaten_neu
+    zutaten_neu = neue_zutaten.split()
+    rezepte[neuer_name] = zutaten_neu
     rezepte_speichern(rezepte)
-    return f"Rezept '{rezeptname_neu}' wurde hinzugefügt."
+    return f"Rezept '{neuer_name}' wurde hinzugefügt."
 
 #Rezepte entfernen
 def rezepte_entfernen(rezeptname):
     rezepte = rezepte_laden()
-    rezeptname = input("Geben Sie den Namen des neuen Rezepts ein: ")
     if rezeptname in rezepte:
         del rezepte[rezeptname]
         rezepte_speichern(rezepte)
@@ -104,13 +102,16 @@ def rezepte_entfernen(rezeptname):
         return f"Rezept '{rezeptname}' nicht gefunden."
 
 #Rezepte bearbeiten
-def rezepte_bearbeiten():
+def rezepte_bearbeiten(rezeptname):
     rezepte = rezepte_laden()
-    rezeptname = input("Geben Sie den Namen des neuen Rezepts ein: ")
     if rezeptname in rezepte:
         match input("Möchten Sie den Namen (1) oder die Zutaten (2) bearbeiten? "):
             case "1":
-                return 0
+                zutatenliste = rezepte[rezeptname]
+                neuer_name = input("Geben Sie den neuen Namen des Rezepts ein: ")
+                rezepte[neuer_name] = zutatenliste
+                del rezepte[rezeptname]
+                rezepte_speichern(rezepte)
             case "2":
                 zutatenliste = input("Geben Sie die neuen Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
                 zutaten = zutatenliste.split()
@@ -161,21 +162,28 @@ while True:
 
     match modus:
         case "1":#Zutaten hinzufügen
-            print(zutaten_hinzufuegen(input("Geben Sie die hinzuzufügende Zutat(en) ein: ")))
+            neue_zutaten = input("Geben Sie die hinzuzufügende Zutat(en) ein: ")
+            print(zutaten_hinzufuegen(neue_zutaten))
         case "2":#Zutaten entfernen
-            print(zutaten_entfernen(input("Geben Sie die zu entfernende Zutat(en) ein: ")))
+            entfernende_zutaten = input("Geben Sie die zu entfernende Zutat(en) ein: ")
+            print(zutaten_entfernen(entfernende_zutaten))
         case "3":#Rezepte hinzufügen
-            print(rezepte_hinzufuegen())
+            neuer_name = input("Geben Sie den Namen des neuen Rezepts ein: ")
+            neue_zutaten = input("Geben Sie die Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
+            print(rezepte_hinzufuegen(neuer_name, neue_zutaten))
         case "4":#Rezepte bearbeiten
-            rezepte_bearbeiten()
+            rezeptname = input("Geben Sie den Namen des zu bearbeitenden Rezepts ein: ")
+            rezepte_bearbeiten(rezeptname)
         case "5":#Rezepte entfernen
-            print(rezepte_entfernen(input("Geben Sie den Namen des zu entfernenden Rezepts ein: ")))
+            rezeptname = input("Geben Sie den Namen des zu entfernenden Rezepts ein: ")
+            print(rezepte_entfernen(rezeptname))
         case "7":#Zutaten anzeigen
             print(vorhandene_zutaten)
         case "8":#Rezepte anzeigen
             print(rezepte_liste)
         case "9":#Rezeptprüfung
-            print(rezeptprüfung(input("Rezeptname: ")))
+            rezeptname = input("Geben Sie den Namen des Rezept ein: ")
+            print(rezeptprüfung(rezeptname))
         case "0":#Beenden
             break
         case _:#ELSE
