@@ -1,3 +1,4 @@
+# Projektarbeit WiSe 25/26 Programmieren mit Python
 # Kuecheninventar
 Python Projektarbeit mit Inventarverwaltung, Rezeptverwaltung und Rezeptabgleich
 
