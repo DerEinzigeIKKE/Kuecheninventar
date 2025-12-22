@@ -11,12 +11,23 @@ Python Projektarbeit mit Inventarverwaltung, Rezeptverwaltung und Rezeptabgleich
 CSV mit allen Zutaten (1 Zutat pro Zeile)
 
 # Rezepte
-
 JSON im Format {"Rezept1": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"],"Rezept2": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"]}
 
 # Rezeptvergleich
 
 
-# main
+# Funktionen
 
-bisher über match case in einzelne Fälle
+## Inventar
++ hinzufügen
++ entfernen
++ anzeigen
+
+## Rezepte
++ hinzufügen
++ entfernen
++ bearbeiten
++ anzeigen
+
+## Vergleich
++ vorhandene mit benötigte Zutaten vergleichen
