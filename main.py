@@ -167,7 +167,7 @@ def rezept_anzeigen(rezeptname):
         #Zutatenliste holen
         zutatenliste = rezepte[rezeptname]
         #Rezept und Zutaten zurückgeben
-        return f"Rezept '{rezeptname}': {', '.join(zutatenliste)}"
+        return f"Rezept '{rezeptname}' benötigt: {', '.join(zutatenliste)}"
     #falls Rezept nicht existiert
     else:
         return f"Rezept '{rezeptname}' nicht gefunden."
