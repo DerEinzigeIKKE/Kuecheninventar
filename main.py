@@ -249,3 +249,6 @@ def main():
             case _:#ELSE
                 print("Ungültige Eingabe.")
 
+if __name__ == "__main__":
+    main()
+
