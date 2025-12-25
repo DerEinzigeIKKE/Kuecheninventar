@@ -199,12 +199,7 @@ def rezeptprüfung(rezeptname):
 def main():
     print("Willkommen.")
     while True:
-        print("Bitte wählen Sie einen Modus:")
-
-        vorhandene_zutaten = zutaten_laden()
-        rezepte = rezepte_laden()
-        rezepte_liste = list(rezepte.keys())
-
+        print("\nBitte wählen Sie einen Modus:\n")
         print("Wähle 1 zum Zutaten hinzufügen!")
         print("Wähle 2 zum Zutaten entfernen!")
         print("Wähle 3 zum Rezepte hinzufügen!")
@@ -214,7 +209,7 @@ def main():
         print("Wähle 7 zum Zutaten anzeigen!")
         print("Wähle 8 zum Rezepte anzeigen!")
         print("Wähle 9 zum Vergleichen!")
-        print("Wähle 0 zum Beenden!")
+        print("Wähle 0 zum Beenden!\n")
 
         match input("Modus: "):
             case "1":#Zutaten hinzufügen
@@ -237,8 +232,13 @@ def main():
                 rezeptname = input("Geben Sie den Namen des Rezept ein: ")
                 print(rezept_anzeigen(rezeptname))
             case "7":#Zutaten anzeigen
-                print(vorhandene_zutaten)
+                zutaten = zutaten_laden()
+                zutaten = str(zutaten).replace("[","").replace("]","").replace("'","").split(", ")
+                zutaten = str(zutaten).replace("'", "")
+                print(zutaten)
             case "8":#Rezepte anzeigen
+                rezepte = rezepte_laden()
+                rezepte_liste = list(rezepte.keys())
                 print(rezepte_liste)
             case "9":#Rezeptprüfung
                 rezeptname = input("Geben Sie den Namen des Rezept ein: ")
