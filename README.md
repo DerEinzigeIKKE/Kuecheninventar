@@ -34,7 +34,17 @@ JSON im Format {"Rezept1": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"],"Rezep
 ## Comparison
 + recipes_check(recipe_name) -> parameter: string (from input)
 
-| Command | Parameters | Return | Comment |
+| Command | Parameters | Return | Returnparameters |
 | --- | --- | --- | --- |
-| git status | List all new or modified files | | |
-| git diff | Show file differences that haven't been staged | | |
+| ingredients_load() | - |  |  |
+| ingredients_save(ingredient_list) | list |  |  |
+| ingredient_add(ingredients_toadd) | string |  |  |
+| ingredient_delete(ingretdients_todelete) | string |  |  |
+| recipes_load() | - |  |  |
+| recipes_save(recipes) | dictionary |  |  |
+| recipes_add(new_name, new_ingredients) | string, string |  |  |
+| recipes_delete(recipe_name) | string |  |  |
+| recipes_update_name(old_name, new_name) | string, string |  |  |
+| recipes_update_ingredients(recipe_name, new_ingredients) | string, string |  |  |
+| recipes_display(recipe_name) | string |  |  |
+| recipes_check(recipe_name) | string |  |  |
