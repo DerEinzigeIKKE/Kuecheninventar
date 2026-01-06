@@ -1,251 +1,260 @@
 import json
 import csv
 
-#Variablen setzen
-REZEPTADRESSE = "rezepte.json"
-ZUTATENADRESSE = "zutaten.csv"
+#Set Adresses
+ADRESS_RECIPE = "rezepte.json"
+ADRESS_INGREDIENT = "zutaten.csv"
 
-#Zutaten laden
-def zutaten_laden():
-    vorhandene_zutaten = []
-    with open(ZUTATENADRESSE, mode="r") as f:
+#load ingredients as list from ADRESS_INGREDIENT
+def ingredients_load():
+    available_ingredients = []
+    with open(ADRESS_INGREDIENT, mode="r") as f:
         reader = csv.reader(f)
-        for zeile in reader:
-            # Nur nicht-leere Zeilen laden
-            if zeile:
-                vorhandene_zutaten.append(zeile)
-    return vorhandene_zutaten
+        for line in reader:
+            #only import not empty rows
+            if line:
+                available_ingredients.append(line)
+    return available_ingredients
 
-#Rezepte laden
-def rezepte_laden():
-    with open(REZEPTADRESSE, "r") as f:
-        rezepte = json.load(f)
-    return rezepte
-
-#Zutaten speichern
-def zutaten_speichern(zutatenliste):
-    #CSV Datei leeren
-    with open(ZUTATENADRESSE, 'w', newline='', encoding='utf-8') as f:
+#save ingredients as CSV in ADRESS_INGREDIENT
+def ingredients_save(ingredient_list: list):
+    #empty csv
+    with open(ADRESS_INGREDIENT, 'w', newline='', encoding='utf-8') as f:
         pass
-    #neue Zutatenliste speichern
-    with open(ZUTATENADRESSE, mode="w") as f:
+    #save passed ingredient_list in csv
+    with open(ADRESS_INGREDIENT, mode="w") as f:
                 writer = csv.writer(f)
-                for eintrag in zutatenliste:
-                    if eintrag not in (None, "", []):
-                        writer.writerow(eintrag) 
+                for line in ingredient_list:
+                    #check if line contains ingredient
+                    if line not in (None, "", []):
+                        writer.writerow(line)
 
-#Rezepte speichern
-def rezepte_speichern(rezepte):
-    with open(REZEPTADRESSE, "w") as f:
-        json.dump(rezepte, f, indent=4)
+#load recipes from ADRESS_RECIPE
+def recipes_load():
+    with open(ADRESS_RECIPE, "r") as f:
+        recipes = json.load(f)
+    return recipes
 
-def zutaten_hinzufuegen(neue_zutaten):
-    #vorhandene Zutaten laden
-    vorhandene_zutaten = zutaten_laden()
-    hinzugefuegte_zutaten = []
-    doppelte_zutaten = []
-    #neue Zutaten überprüfen
-    for zutat in neue_zutaten.split():
-        #Zutat hinzufügen, wenn sie noch nicht vorhanden ist
-        if zutat and [zutat] not in vorhandene_zutaten:
-            vorhandene_zutaten.append([zutat])
-            hinzugefuegte_zutaten.append(zutat)
-        #Zutat als doppelt markieren, wenn sie bereits vorhanden ist
+#save recipes as JSON in ADRESS_RECIPE
+def recipes_save(recipes: dict):
+    with open(ADRESS_RECIPE, "w") as f:
+        json.dump(recipes, f, indent=4)
+
+def ingredient_add(ingredients_toadd):
+    #load available ingredients
+    available_ingredients = ingredients_load()
+    #set lists for return messages
+    ingredients_added = []
+    ingredients_doubled = []
+    #check if new ingredient(s) is/are already in the inventory
+    for ingredient in ingredients_toadd.split():
+        #if ingredient is new -> add to inventory_list and return_list
+        if ingredient and [ingredient] not in available_ingredients:
+            available_ingredients.append([ingredient])
+            ingredients_added.append(ingredient)
+        #if ingredient is alredy in inventory -> add to return_list_double
         else:
-            doppelte_zutaten.append(zutat)
-    zutaten_speichern(vorhandene_zutaten)
-    #Rückgabefälle definieren
-    #neue und doppelte Zutaten
-    if len(doppelte_zutaten) > 0 and len(hinzugefuegte_zutaten) > 0:
-        return f"Bereits vorhandene Zutaten: {', '.join(doppelte_zutaten)}!\nHinzugefügte Zutaten: {', '.join(hinzugefuegte_zutaten)}!"
-    #nur neue Zutaten
-    if len(doppelte_zutaten) == 0 and len(hinzugefuegte_zutaten) > 0:
-        return f"Hinzugefügte Zutaten: {', '.join(hinzugefuegte_zutaten)}!"
-    #nur doppelte Zutaten
-    if len(doppelte_zutaten) > 0 and len(hinzugefuegte_zutaten) == 0:
-        return f"Bereits vorhandene Zutaten: {', '.join(doppelte_zutaten)}!"
-    #weder neue noch doppelte Zutaten
-    if len(doppelte_zutaten) == 0 and len(hinzugefuegte_zutaten) == 0:
-        return "Keine neuen Zutaten hinzugefügt."
+            ingredients_doubled.append(ingredient)
+    ingredients_save(available_ingredients)
+    #define return cases
+    #added new ingredients & had double ingredients
+    if len(ingredients_doubled) > 0 and len(ingredients_added) > 0:
+        return f"Alredy available ingredients: {', '.join(ingredients_doubled)}!\nAdded ingredients: {', '.join(ingredients_added)}!"
+    #added new ingredients
+    if len(ingredients_doubled) == 0 and len(ingredients_added) > 0:
+        return f"Added ingredients: {', '.join(ingredients_added)}!"
+    #had double ingredients
+    if len(ingredients_doubled) > 0 and len(ingredients_added) == 0:
+        return f"Alredy available ingredients: {', '.join(ingredients_doubled)}!"
+    #nothing
+    if len(ingredients_doubled) == 0 and len(ingredients_added) == 0:
+        return "Nothing happened."
 
 #Zutatenliste bearbeiten
-def zutaten_entfernen(weg_zutaten):
-    #vorhandene Zutaten laden
-    vorhandene_zutaten = zutaten_laden()
-    entfernte_zutaten = []
-    nicht_gefundene_zutaten = []
-    #zu entfernende Zutaten überprüfen
-    for zutat in weg_zutaten.split():
-        #Wenn Zutat vorhanden -> entfernen
-        if [zutat] in vorhandene_zutaten:
-            vorhandene_zutaten.remove([zutat])
-            entfernte_zutaten.append(zutat)
-        #Wenn Zutat nicht vorhanden -> nicht gefunden
+def ingredients_delete(ingredients_todelete):
+    #load available ingredients
+    available_ingredients = ingredients_load()
+    #set lists for return messages
+    ingredients_deleted = []
+    ingredients_notfound = []
+    #check if ingredient to delete is in available ingredients
+    for ingredient in ingredients_todelete.split():
+        #if ingredient is available -> remove from inventory_list and add to return_list
+        if [ingredient] in available_ingredients:
+            available_ingredients.remove([ingredient])
+            ingredients_deleted.append(ingredient)
+        #if ingredient is not available -> add to return_list
         else:
-            nicht_gefundene_zutaten.append(zutat)
-    zutaten_speichern(vorhandene_zutaten)
-    #Rückgabefälle definieren
-    #entfernte und nicht gefundene Zutaten
-    if len(nicht_gefundene_zutaten) > 0 and len(entfernte_zutaten) > 0:
-        return f"Nicht gefundene Zutaten: {', '.join(nicht_gefundene_zutaten)}!\nEntfernte Zutaten: {', '.join(entfernte_zutaten)}!"
-    #nur entfernte Zutaten
-    if len(nicht_gefundene_zutaten) == 0 and len(entfernte_zutaten) > 0:
-        return f"Entfernte Zutaten: {', '.join(entfernte_zutaten)}!"
-    #nur nicht gefundene Zutaten
-    if len(nicht_gefundene_zutaten) > 0 and len(entfernte_zutaten) == 0:
-        return f"Nicht gefundene Zutaten: {', '.join(nicht_gefundene_zutaten)}!"
-    #weder entfernte noch nicht gefundene Zutaten
-    if len(nicht_gefundene_zutaten) == 0 and len(entfernte_zutaten) == 0:
-        return "Keine Zutaten entfernt."
+            ingredients_notfound.append(ingredient)
+    ingredients_save(available_ingredients)
+    #define return cases
+    #ingredients removed & ingredients not found
+    if len(ingredients_notfound) > 0 and len(ingredients_deleted) > 0:
+        return f"Ingredients not found: {', '.join(ingredients_notfound)}!\nRemoved ingredients: {', '.join(ingredients_deleted)}!"
+    #ingredients removed
+    if len(ingredients_notfound) == 0 and len(ingredients_deleted) > 0:
+        return f"Removed ingredients: {', '.join(ingredients_deleted)}!"
+    #ingredients not found
+    if len(ingredients_notfound) > 0 and len(ingredients_deleted) == 0:
+        return f"Ingredients not found: {', '.join(ingredients_notfound)}!"
+    #nothing
+    if len(ingredients_notfound) == 0 and len(ingredients_deleted) == 0:
+        return "Nothing happened."
     
-#Rezepte hinzufügen
-def rezepte_hinzufuegen(neuer_name, neue_zutaten):
-    #vorhandene Rezepte laden
-    rezepte = rezepte_laden()
-    #prüfen, ob Rezeptname bereits existiert
-    if neuer_name in rezepte:
-        return f"Rezept '{neuer_name}' existiert bereits!"
-    #Zutaten in Liste umwandeln
-    zutaten_neu = neue_zutaten.split()
-    #neue Zutaten zum Rezept hinzufügen
-    rezepte[neuer_name] = zutaten_neu
-    #Rezepte speichern
-    rezepte_speichern(rezepte)
-    return f"Rezept '{neuer_name}' wurde hinzugefügt."
+#Add Recipes
+def recipes_add(new_name, new_ingredients):
+    #load available recipes
+    recipes = recipes_load()
+    #check if new name is already in recipes
+    if new_name in recipes:
+        return f"recipe '{new_name}' alredy exists!"
+    #ingredients to list
+    ingredient_list = new_ingredients.split()
+    #append recipes with new recipe & new ingredinets
+    recipes[new_name] = ingredient_list
+    #Save recipes
+    recipes_save(recipes)
+    return f"Recipe '{new_name}' was added."
 
-#Rezepte entfernen
-def rezepte_entfernen(rezeptname):
-    #vorhandene Rezepte laden
-    rezepte = rezepte_laden()
-    #prüfen, ob Rezept existiert
-    if rezeptname in rezepte:
-        del rezepte[rezeptname]
-        rezepte_speichern(rezepte)
-        return f"Rezept '{rezeptname}' wurde entfernt."
-    #falls Rezept nicht existiert
+#delete recipe
+def recipes_delete(recipe_name):
+    #load available recipes
+    recipes = recipes_load()
+    #check if recipe is in saved recipes
+    if recipe_name in recipes:
+        del recipes[recipe_name]
+        recipes_save(recipes)
+        return f"Recipe '{recipe_name}' was removed."
+    #if recipe is unknown
     else:
-        return f"Rezept '{rezeptname}' nicht gefunden."
+        return f"Recipe '{recipe_name}' was not found."
 
-#Rezepte bearbeiten
-def rezepte_bearbeiten(rezeptname):
-    #vorhandene Rezepte laden
-    rezepte = rezepte_laden()
-    #prüfen, ob Rezept existiert
-    if rezeptname in rezepte:
-        match input("Möchten Sie den Namen (1) oder die Zutaten (2) bearbeiten? "):
-            case "1":
-                #Zutaten von Rezept holen
-                zutatenliste = rezepte[rezeptname]
-                neuer_name = input("Geben Sie den neuen Namen des Rezepts ein: ")
-                #Zutaten auf neuen Namen speichern
-                rezepte[neuer_name] = zutatenliste
-                #altes Rezept löschen
-                del rezepte[rezeptname]
-                #Rezepte speichern
-                rezepte_speichern(rezepte)
-            case "2":
-                zutatenliste = input("Geben Sie die neuen Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
-                #Zutaten in Liste umwandeln
-                zutaten = zutatenliste.split()
-                #Zutaten des Rezepts aktualisieren
-                rezepte[rezeptname] = zutaten
-                #Rezepte speichern
-                rezepte_speichern(rezepte)
-                print(f"Rezept '{rezeptname}' wurde aktualisiert.")
-            case _:
-                print("Ungültige Auswahl.")
-    #falls Rezept nicht existiert
+#update recipe name
+def recipes_update_name(old_name, new_name):
+    #load available recipes
+    recipes = recipes_load()
+    #check if recipe exists
+    if old_name in recipes:
+        #load ingredients from recipe
+        ingredients = recipes[old_name]
+        #save recipe with new name
+        recipes[new_name] = ingredients
+        #delete old recipe
+        del recipes[old_name]
+        #Rezepte speichern
+        recipes_save(recipes)
+        return f"Recipe '{old_name}' changed to {new_name}."
     else:
-        print(f"Rezept '{rezeptname}' nicht gefunden.")
+        return f"Recipe '{old_name}' not found."
+    
+#update recipe ingredients
+def recipes_update_ingredients(recipe_name, new_ingredients):
+    #load available recipes
+    recipes = recipes_load()
+    #check if recipe exists
+    if recipe_name in recipes:
+        ingredients = new_ingredients.split()
+        #Update ingredients for recipes
+        recipes[recipe_name] = ingredients
+        #save recipes
+        recipes_save(recipes)
+        return f"Updated ingredients for '{recipe_name}'."
+    else:
+        return f"Recipe '{recipe_name}' not found."
 
-#Ein Rezept anzeigen
-def rezept_anzeigen(rezeptname):
-    #vorhandene Rezepte laden
-    rezepte = rezepte_laden()
-    #prüfen, ob Rezept existiert
-    if rezeptname in rezepte:
-        #Zutatenliste holen
-        zutatenliste = rezepte[rezeptname]
-        #Rezept und Zutaten zurückgeben
-        return f"Rezept '{rezeptname}' benötigt: {', '.join(zutatenliste)}"
-    #falls Rezept nicht existiert
+#display 1 recipe
+def recipes_display(recipe_name):
+    #load available recipes
+    recipes = recipes_load()
+    #check if recipe
+    if recipe_name in recipes:
+        #get needed ingredients
+        ingredients = recipes[recipe_name]
+        #return
+        return f"Recipe '{recipe_name}' needs: {', '.join(ingredients)}"
     else:
-        return f"Rezept '{rezeptname}' nicht gefunden."
+        return f"Rezept '{recipe_name}' nicht gefunden."
 
-#Rezeptprüfung
-def rezeptprüfung(rezeptname):
-    fehlend = []
-    #vorhandene Rezepte laden
-    rezepte = rezepte_laden()
-    #vorhandene Zutaten laden
-    vorhandene_zutaten = zutaten_laden()
-    #prüfen, ob Rezept existiert
-    if rezeptname not in rezepte:
-        return f"Rezept '{rezeptname}' nicht gefunden!"
-    #benötigte Zutaten laden
-    benoetigt = rezepte[rezeptname]
-    #fehlende Zutaten überprüfen
-    for zutat in benoetigt:
-        if [zutat] not in vorhandene_zutaten:
-            fehlend.append(zutat)
-    #falls fehlende Zutaten vorhanden sind
-    if len(fehlend) > 0:
-        return f"Fehlende Zutaten für {rezeptname}: {', '.join(fehlend)}!"
-    #falls alle Zutaten vorhanden sind
+#check recipes
+def recipes_check(recipe_name):
+    missing_ingredients = []
+    #load available recipes
+    recipes = recipes_load()
+    #load available ingredients
+    available_ingredients = ingredients_load()
+    #check if recipe exists
+    if recipe_name not in recipes:
+        return f"Recipe '{recipe_name}' not found!"
+    #load needed ingredients
+    needed_ingredients = recipes[recipe_name]
+    #check for missing ingredients
+    for ingredient in needed_ingredients:
+        if [ingredient] not in available_ingredients:
+            missing_ingredients.append(ingredient)
+    #if missing ingredients exist
+    if len(missing_ingredients) > 0:
+        return f"Missing ingredients for {recipe_name}: {', '.join(missing_ingredients)}!"
+    #if all ingredients are available
     else:
-        return "Alle Zutaten gefunden!"
+        return "All ingredients found!"
 
 #Main
 def main():
-    print("Willkommen.")
+    print("Wellcome.")
     while True:
-        print("\nBitte wählen Sie einen Modus:\n")
-        print("Wähle 1 zum Zutaten hinzufügen!")
-        print("Wähle 2 zum Zutaten entfernen!")
-        print("Wähle 3 zum Rezepte hinzufügen!")
-        print("Wähle 4 zum Rezepte bearbeiten!")
-        print("Wähle 5 zum Rezepte entfernen!")
-        print("Wähle 6 um EIN Rezept anzuzeigen!")
-        print("Wähle 7 zum Zutaten anzeigen!")
-        print("Wähle 8 zum Rezepte anzeigen!")
-        print("Wähle 9 zum Vergleichen!")
-        print("Wähle 0 zum Beenden!\n")
+        print("\nPlease select a mode:\n")
+        print("Choose 1 to add ingredients!")
+        print("Choose 2 to remove ingredients!")
+        print("Choose 3 to add recipe!")
+        print("Choose 4 to delete recipe!")
+        print("Choose 5 to update recipe name!")
+        print("Choose 6 to update recipe ingredients!")
+        print("Choose 7 to show 1 recipe!")
+        print("Choose 8 to show all ingredients!")
+        print("Choose 9 to show all recipe names!")
+        print("Choose ENTER to compare recipe with available ingredients!")
+        print("Choose 0 to end!\n")
 
         match input("Modus: "):
-            case "1":#Zutaten hinzufügen
-                neue_zutaten = input("Geben Sie die hinzuzufügende Zutat(en) ein: ")
-                print(zutaten_hinzufuegen(neue_zutaten))
-            case "2":#Zutaten entfernen
-                entfernende_zutaten = input("Geben Sie die zu entfernende Zutat(en) ein: ")
-                print(zutaten_entfernen(entfernende_zutaten))
-            case "3":#Rezepte hinzufügen
-                neuer_name = input("Geben Sie den Namen des neuen Rezepts ein: ")
-                neue_zutaten = input("Geben Sie die Zutaten des Rezepts ein (durch Leerzeichen getrennt): ")
-                print(rezepte_hinzufuegen(neuer_name, neue_zutaten))
-            case "4":#Rezepte bearbeiten
-                rezeptname = input("Geben Sie den Namen des zu bearbeitenden Rezepts ein: ")
-                rezepte_bearbeiten(rezeptname)
-            case "5":#Rezepte entfernen
-                rezeptname = input("Geben Sie den Namen des zu entfernenden Rezepts ein: ")
-                print(rezepte_entfernen(rezeptname))
-            case "6":#Ein Rezept anzeigen
-                rezeptname = input("Geben Sie den Namen des Rezept ein: ")
-                print(rezept_anzeigen(rezeptname))
-            case "7":#Zutaten anzeigen
-                zutaten = zutaten_laden()
-                zutaten = str(zutaten).replace("[","").replace("]","").replace("'","").split(", ")
-                zutaten = str(zutaten).replace("'", "")
-                print(zutaten)
-            case "8":#Rezepte anzeigen
-                rezepte = rezepte_laden()
-                rezepte_liste = list(rezepte.keys())
-                print(rezepte_liste)
-            case "9":#Rezeptprüfung
-                rezeptname = input("Geben Sie den Namen des Rezept ein: ")
-                print(rezeptname)
-                print(rezeptprüfung(rezeptname))
+            case "1":#add ingredients
+                ingredients = input("Enter the new ingredient(s): ")
+                print(ingredient_add(ingredients))
+            case "2":#remove ingredient
+                ingredients = input("Enter the ingredient(s) which shall be removed: ")
+                print(ingredients_delete(ingredients))
+            case "3":#add recipe
+                name = input("Enter the name of the recipe: ")
+                ingredients = input("Enter the ingredients of the recipe: ")
+                print(recipes_add(name, ingredients))
+            case "4":#delete recipe
+                name = input("Enter the recipe which shall be removed: ")
+                recipes_delete(name)
+            case "5":#recipe update name
+                old_name = input("Enter the old name of the recipe: ")
+                new_name = input("Enter the new name of the recipe: ")
+                print(recipes_update_name(old_name, new_name))
+            case "6":#recipe update ingredients
+                name = input("Enter the name of the recipe: ")
+                ingredients = input("Enter the new ingredientes of the recipe: ")
+                print(recipes_update_ingredients(name, ingredients))
+            case "7":#show 1 recipe
+                name = input("Enter the name of the recipe: ")
+                print(recipes_display(name))
+            case "8":#show all ingredients
+                ingredients = ingredients_load()
+                ingredients = str(ingredients).replace("[","").replace("]","").replace("'","").split(", ")
+                ingredients = str(ingredients).replace("'", "")
+                print(ingredients)
+            case "9":#show all recipes
+                recipes = recipes_load()
+                recipes_list = list(recipes.keys())
+                print(recipes_list)
             case "0":#Beenden
                 break
+            case "":#recipes_check
+                name = input("Enter the name of the recipe: ")                
+                print(name)
+                print(recipes_check(name))
             case _:#ELSE
                 print("Ungültige Eingabe.")
 
