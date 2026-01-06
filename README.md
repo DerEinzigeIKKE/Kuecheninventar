@@ -33,3 +33,8 @@ JSON im Format {"Rezept1": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"],"Rezep
 
 ## Comparison
 + recipes_check(recipe_name) -> parameter: string (from input)
+
+| Command | Parameters | Return | Comment |
+| --- | --- | --- | --- |
+| git status | List all new or modified files | | |
+| git diff | Show file differences that haven't been staged | | |
