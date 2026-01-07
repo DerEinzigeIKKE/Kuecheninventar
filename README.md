@@ -15,6 +15,21 @@ JSON im Format {"Rezept1": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"],"Rezep
 
 # Functions
 
+| Command | Parameters | Return | What does it do? |
+| --- | --- | --- | --- |
+| ingredients_load() | - | list |  |
+| ingredients_save(ingredient_list) | list |  |  |
+| ingredient_add(ingredients_toadd) | string | fstring |  |
+| ingredient_delete(ingretdients_todelete) | string | fstring |  |
+| recipes_load() | - | dictonary |  |
+| recipes_save(recipes) | dictionary |  |  |
+| recipes_add(new_name, new_ingredients) | string, string | fstring |  |
+| recipes_delete(recipe_name) | string | fstring |  |
+| recipes_update_name(old_name, new_name) | string, string | fstring |  |
+| recipes_update_ingredients(recipe_name, new_ingredients) | string, string | fstring |  |
+| recipes_display(recipe_name) | string | fstring |  |
+| recipes_check(recipe_name) | string | fstring |  |
+
 ## Ingredients
 + load: ingredients_load()
 + save: ingredients_save(ingredient_list) -> parameter: list
@@ -34,17 +49,4 @@ JSON im Format {"Rezept1": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"],"Rezep
 ## Comparison
 + recipes_check(recipe_name) -> parameter: string (from input)
 
-| Command | Parameters | Return | Returnparameters |
-| --- | --- | --- | --- |
-| ingredients_load() | - |  |  |
-| ingredients_save(ingredient_list) | list |  |  |
-| ingredient_add(ingredients_toadd) | string |  |  |
-| ingredient_delete(ingretdients_todelete) | string |  |  |
-| recipes_load() | - |  |  |
-| recipes_save(recipes) | dictionary |  |  |
-| recipes_add(new_name, new_ingredients) | string, string |  |  |
-| recipes_delete(recipe_name) | string |  |  |
-| recipes_update_name(old_name, new_name) | string, string |  |  |
-| recipes_update_ingredients(recipe_name, new_ingredients) | string, string |  |  |
-| recipes_display(recipe_name) | string |  |  |
-| recipes_check(recipe_name) | string |  |  |
+
