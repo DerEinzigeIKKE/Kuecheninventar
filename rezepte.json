@@ -1,16 +1,16 @@
 {
-    "Pfannkuchen": [
-        "Mehl",
-        "Milch",
-        "Eier",
-        "Zucker",
-        "Salz"
+    "PFANNKUCHEN": [
+        "MEHL",
+        "MILCH",
+        "EIER",
+        "ZUCKER",
+        "SALZ"
     ],
-    "Salat": [
-        "Tomaten",
-        "Gurke",
-        "Olivenoel",
-        "Essig",
-        "Salz"
+    "SALAT": [
+        "TOMATE",
+        "GURKE",
+        "OLIVENOEL",
+        "ESSIG",
+        "SALZ"
     ]
 }
