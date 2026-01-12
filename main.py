@@ -141,7 +141,7 @@ def recipes_update_name(old_name, new_name):
         recipes[new_name] = ingredients
         #delete old recipe
         del recipes[old_name]
-        #Rezepte speichern
+        #save recipes
         recipes_save(recipes)
         return f"Recipe '{old_name}' changed to {new_name}."
     else:
@@ -249,14 +249,14 @@ def main():
                 recipes = recipes_load()
                 recipes_list = list(recipes.keys())
                 print(recipes_list)
-            case "0":#Beenden
+            case "0":#exit
                 break
             case "":#recipes_check
                 name = input("Enter the name of the recipe: ")                
                 print(name)
                 print(recipes_check(name))
             case _:#ELSE
-                print("Ungültige Eingabe.")
+                print("unvalid entry!")
 
 if __name__ == "__main__":
     main()
