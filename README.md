@@ -4,14 +4,12 @@ Python Projektarbeit mit Inventarverwaltung, Rezeptverwaltung und Rezeptabgleich
 
 # TODO
 - GUI :/
-+ Funktionen vereinzeln
-+ Hardcode durch Variablen in oberen Teil der Main ersetzen (z.B. Speicheradressen)
 
 # Inventar 
-CSV mit allen Zutaten (1 Zutat pro Zeile)
+CSV mit allen Zutaten (1 Zutat pro Zeile) (all Caps)
 
 # Rezepte
-JSON im Format {"Rezept1": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"],"Rezept2": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"]}
+JSON im Format {"Rezept1": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"],"Rezept2": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"]} (all Caps)
 
 # Functions
 
@@ -29,6 +27,8 @@ JSON im Format {"Rezept1": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"],"Rezep
 | recipes_update_ingredients(recipe_name, new_ingredients) | string, string | fstring |  |
 | recipes_display(recipe_name) | string | fstring |  |
 | recipes_check(recipe_name) | string | fstring |  |
+| normalize_string(string) | string | string |  |
+| normalize_list(string) | string | list |  |
 
 ## Ingredients
 + load: ingredients_load()
