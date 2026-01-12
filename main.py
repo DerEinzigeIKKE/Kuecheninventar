@@ -40,6 +40,18 @@ def recipes_save(recipes: dict):
     with open(ADRESS_RECIPE, "w") as f:
         json.dump(recipes, f, indent=4)
 
+def normalize_string(string):
+    #String to all caps
+    string_normalized = string.upper()
+    return string_normalized
+
+def normalize_list(inputstring):
+    ingredient_list = []
+    for ingredient in inputstring.split():
+        ingredient_normalized = normalize_string(ingredient)
+        ingredient_list.append(ingredient_normalized)
+    return ingredient_list
+
 def ingredient_add(ingredients_toadd):
     #load available ingredients
     available_ingredients = ingredients_load()
@@ -48,9 +60,11 @@ def ingredient_add(ingredients_toadd):
     ingredients_doubled = []
     #check if new ingredient(s) is/are already in the inventory
     for ingredient in ingredients_toadd.split():
+        #normalize ingredient
+        ingredient_normalized = normalize_string(ingredient)
         #if ingredient is new -> add to inventory_list and return_list
-        if ingredient and [ingredient] not in available_ingredients:
-            available_ingredients.append([ingredient])
+        if ingredient_normalized and [ingredient_normalized] not in available_ingredients:
+            available_ingredients.append([ingredient_normalized])
             ingredients_added.append(ingredient)
         #if ingredient is alredy in inventory -> add to return_list_double
         else:
@@ -79,9 +93,11 @@ def ingredients_delete(ingredients_todelete):
     ingredients_notfound = []
     #check if ingredient to delete is in available ingredients
     for ingredient in ingredients_todelete.split():
+        #normalize ingredient
+        ingredient_normalized = normalize_string(ingredient)
         #if ingredient is available -> remove from inventory_list and add to return_list
-        if [ingredient] in available_ingredients:
-            available_ingredients.remove([ingredient])
+        if [ingredient_normalized] in available_ingredients:
+            available_ingredients.remove([ingredient_normalized])
             ingredients_deleted.append(ingredient)
         #if ingredient is not available -> add to return_list
         else:
@@ -105,13 +121,15 @@ def ingredients_delete(ingredients_todelete):
 def recipes_add(new_name, new_ingredients):
     #load available recipes
     recipes = recipes_load()
+    #normalize name
+    name_normalized = normalize_string(new_name)
     #check if new name is already in recipes
-    if new_name in recipes:
+    if name_normalized in recipes:
         return f"recipe '{new_name}' alredy exists!"
     #ingredients to list
-    ingredient_list = new_ingredients.split()
+    ingredient_list = normalize_list(new_ingredients)
     #append recipes with new recipe & new ingredinets
-    recipes[new_name] = ingredient_list
+    recipes[name_normalized] = ingredient_list
     #Save recipes
     recipes_save(recipes)
     return f"Recipe '{new_name}' was added."
@@ -120,9 +138,11 @@ def recipes_add(new_name, new_ingredients):
 def recipes_delete(recipe_name):
     #load available recipes
     recipes = recipes_load()
+    #normalize name
+    name_normalized = normalize_string(recipe_name)
     #check if recipe is in saved recipes
-    if recipe_name in recipes:
-        del recipes[recipe_name]
+    if name_normalized in recipes:
+        del recipes[name_normalized]
         recipes_save(recipes)
         return f"Recipe '{recipe_name}' was removed."
     #if recipe is unknown
@@ -133,14 +153,17 @@ def recipes_delete(recipe_name):
 def recipes_update_name(old_name, new_name):
     #load available recipes
     recipes = recipes_load()
+    #normalze names
+    old_normalized = normalize_string(old_name)
+    new_normalized = normalize_string(new_name)
     #check if recipe exists
     if old_name in recipes:
         #load ingredients from recipe
-        ingredients = recipes[old_name]
+        ingredients = recipes[old_normalized]
         #save recipe with new name
-        recipes[new_name] = ingredients
+        recipes[new_normalized] = ingredients
         #delete old recipe
-        del recipes[old_name]
+        del recipes[old_normalized]
         #save recipes
         recipes_save(recipes)
         return f"Recipe '{old_name}' changed to {new_name}."
@@ -151,11 +174,13 @@ def recipes_update_name(old_name, new_name):
 def recipes_update_ingredients(recipe_name, new_ingredients):
     #load available recipes
     recipes = recipes_load()
+    #normalize name
+    name_normalized = normalize_string(recipe_name)
     #check if recipe exists
-    if recipe_name in recipes:
-        ingredients = new_ingredients.split()
+    if name_normalized in recipes:
+        ingredient_list = normalize_list(new_ingredients)
         #Update ingredients for recipes
-        recipes[recipe_name] = ingredients
+        recipes[name_normalized] = ingredient_list
         #save recipes
         recipes_save(recipes)
         return f"Updated ingredients for '{recipe_name}'."
@@ -166,10 +191,12 @@ def recipes_update_ingredients(recipe_name, new_ingredients):
 def recipes_display(recipe_name):
     #load available recipes
     recipes = recipes_load()
+    #normalize name
+    name_normalized = normalize_string(recipe_name)
     #check if recipe
-    if recipe_name in recipes:
+    if name_normalized in recipes:
         #get needed ingredients
-        ingredients = recipes[recipe_name]
+        ingredients = recipes[name_normalized]
         #return
         return f"Recipe '{recipe_name}' needs: {', '.join(ingredients)}"
     else:
@@ -180,13 +207,15 @@ def recipes_check(recipe_name):
     missing_ingredients = []
     #load available recipes
     recipes = recipes_load()
+    #normalize name
+    name_normalized = normalize_string(recipe_name)
     #load available ingredients
     available_ingredients = ingredients_load()
     #check if recipe exists
-    if recipe_name not in recipes:
+    if name_normalized not in recipes:
         return f"Recipe '{recipe_name}' not found!"
     #load needed ingredients
-    needed_ingredients = recipes[recipe_name]
+    needed_ingredients = recipes[name_normalized]
     #check for missing ingredients
     for ingredient in needed_ingredients:
         if [ingredient] not in available_ingredients:
