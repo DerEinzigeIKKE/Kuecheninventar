@@ -16,20 +16,21 @@ Eine intelligente Anwendung zur Verwaltung von Zutaten und Entdeckung neuer Reze
 
 Das folgende Diagramm zeigt, wie die Komponenten der Anwendung zusammenarbeiten:
 
-```
+```mermaid
 graph TD
     User[Benutzer] -->|Interagiert via Browser| Frontend["Streamlit App (app.py)"]
     
     subgraph "Lokale Maschine"
-        Frontend -->|Liest/Schreibt| DB[(SQLite Datenbank)]
+        Frontend -->|Liest/Schreibt| DB[("SQLite Datenbank")]
         Frontend -->|Sendet Bilder| Ollama[Ollama Server]
         Ollama -->|Lädt Modell| Model[[Qwen 2.5-VL 3B]]
         Ollama -->|Erkannte Zutaten| Frontend
     end
     
     subgraph "Internet / Cloud"
-        Frontend -->|API Request (Zutaten)| Edamam[Edamam Rezept API]
-        Edamam -->|JSON Response (Rezepte)| Frontend
+        %% HIER WAR DER FEHLER: Anführungszeichen um den Text hinzugefügt
+        Frontend -->|"API Request (Zutaten)"| Edamam[Edamam Rezept API]
+        Edamam -->|"JSON Response (Rezepte)"| Frontend
     end
 
     classDef local fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
