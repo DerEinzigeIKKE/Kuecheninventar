@@ -16,7 +16,7 @@ Eine intelligente Anwendung zur Verwaltung von Zutaten und Entdeckung neuer Reze
 
 Das folgende Diagramm zeigt, wie die Komponenten der Anwendung zusammenarbeiten:
 
-```mermaid
+```
 graph TD
     User[Benutzer] -->|Interagiert via Browser| Frontend["Streamlit App (app.py)"]
     
