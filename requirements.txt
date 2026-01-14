@@ -1,0 +1,7 @@
+streamlit
+requests
+ollama
+python-dotenv
+sqlalchemy
+bcrypt
+Pillow
