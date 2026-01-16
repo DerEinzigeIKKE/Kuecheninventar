@@ -26,9 +26,10 @@ def analyze_ingredients_from_images(images: List[Image.Image]) -> List[str]:
     """
     # Prompt auf Englisch für das Qwen-Modell
     prompt = (
-        "Analyze these images and list only the edible ingredients you see. "
-        "Return the answer as a pure, comma-separated list without bullet points or extra text. "
-        "Example: Tomato, Onion, Garlic"
+        "Analyze these images and identify ONLY edible food ingredients suitable for cooking. "
+        "Ignore everything else (like trees, landscapes, people, plates, utensils). "
+        "If you see valid ingredients, return them as a comma-separated list (e.g., 'Tomato, Onion'). "
+        "If the image contains NO edible ingredients, return exactly: 'Fehler: Keine essbaren Zutaten erkannt'."
     )
 
     image_bytes_list = []
@@ -57,6 +58,10 @@ def analyze_ingredients_from_images(images: List[Image.Image]) -> List[str]:
         # Verarbeitung der Antwort
         text = response['message']['content'].strip()
         
+        # Check explicit error from model
+        if text.startswith("Fehler:"):
+            return [text]
+
         # Bereinigen und Splitten der Liste
         ingredients = [item.strip() for item in text.split(',') if item.strip()]
         return ingredients

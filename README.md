@@ -74,7 +74,7 @@ Stellen Sie sicher, dass Ollama läuft, und laden Sie das benötigte Vision-Mode
 
 ```bash
 # Modell herunterladen (ca. 3GB)
-ollama pull qwen2.5-vl:3b
+ollama pull qwen2.5vl:3b
 ```
 
 ### 4. API-Keys konfigurieren

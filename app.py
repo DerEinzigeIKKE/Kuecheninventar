@@ -96,7 +96,6 @@ def main():
                             detected_ingredients = analyze_ingredients_from_images(images)
                             if detected_ingredients:
                                 st.success(f"Erkannte Zutaten: {', '.join(detected_ingredients)}")
-                                # Automatischer Start der Rezeptsuche
                                 with st.spinner("Suche nach passenden Rezepten..."):
                                     st.session_state.recipes = fetch_recipes_from_edamam(detected_ingredients)
                                     st.session_state.search_performed = True
