@@ -18,9 +18,6 @@ class User(Base):
     # Beziehung zu den gespeicherten Rezepten
     recipes = relationship("Recipe", back_populates="user")
 
-    def __repr__(self):
-        return f"<User(username='{self.username}')>"
-
 class Recipe(Base):
     """
     Repräsentiert ein gespeichertes Rezept.
@@ -38,9 +35,6 @@ class Recipe(Base):
 
     # Beziehung zum Benutzer
     user = relationship("User", back_populates="recipes")
-
-    def __repr__(self):
-        return f"<Recipe(title='{self.title}')>"
 
 # Datenbank-Initialisierung
 DATABASE_URL = "sqlite:///recipes.db"
