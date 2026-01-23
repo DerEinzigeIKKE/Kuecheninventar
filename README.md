@@ -1,0 +1,52 @@
+# Projektarbeit WiSe 25/26 Programmieren mit Python
+# Kuecheninventar
+Python Projektarbeit mit Inventarverwaltung, Rezeptverwaltung und Rezeptabgleich
+
+# TODO
+- GUI :/
+
+# Inventar 
+CSV mit allen Zutaten (1 Zutat pro Zeile) (all Caps)
+
+# Rezepte
+JSON im Format {"Rezept1": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"],"Rezept2": ["Zutat1","Zutat2","Zutat3","Zutat4","Zutat5"]} (all Caps)
+
+# Functions
+
+| Command | Parameters | Return | What does it do? |
+| --- | --- | --- | --- |
+| ingredients_load() | - | list |  |
+| ingredients_save(ingredient_list) | list |  |  |
+| ingredient_add(ingredients_toadd) | string | fstring |  |
+| ingredient_delete(ingretdients_todelete) | string | fstring |  |
+| recipes_load() | - | dictonary |  |
+| recipes_save(recipes) | dictionary |  |  |
+| recipes_add(new_name, new_ingredients) | string, string | fstring |  |
+| recipes_delete(recipe_name) | string | fstring |  |
+| recipes_update_name(old_name, new_name) | string, string | fstring |  |
+| recipes_update_ingredients(recipe_name, new_ingredients) | string, string | fstring |  |
+| recipes_display(recipe_name) | string | fstring |  |
+| recipes_check(recipe_name) | string | fstring |  |
+| normalize_string(string) | string | string |  |
+| normalize_list(string) | string | list |  |
+
+## Ingredients
++ load: ingredients_load()
++ save: ingredients_save(ingredient_list) -> parameter: list
++ add:  ingredient_add(ingredients_toadd) -> parameter: string (from input)
++ remove: ingredient_delete(ingretdients_todelete) -> parameter: string (from input)
+
+
+## Recipes
++ load: recipes_load()
++ save: recipes_save(recipes) -> parameter: dictionary
++ add:  recipes_add(new_name, new_ingredients) -> parameters: string, string (from input)
++ remove: recipes_delete(recipe_name) -> parameter: string (from input)
++ update name: recipes_update_name(old_name, new_name) -> parameter: string, string (from input)
++ update ingredient: recipes_update_ingredients(recipe_name, new_ingredients) -> parameter: string, string (from input)
++ show: recipes_display(recipe_name) -> parameter: string (from input)
+
+## Comparison
++ recipes_check(recipe_name) -> parameter: string (from input)
+
+
